@@ -6,13 +6,9 @@ import datetime
 ## Basic variables
 # Save data to excel file
 file_path = 'content/plastiq_input_information.xlsx'
+df_header = "Kontaktinformationen"
 
 ## Functions
-# Function to update dict with session state keys after every submission of form
-def update_keys():
-    for k in st.session_state.key_dict_contact:
-        st.session_state.key_dict_contact[k] = st.session_state[k]
-
 # Function to collect contact data
 def collect_contact():
     with st.form(key="contact_form"):
@@ -31,7 +27,7 @@ def collect_contact():
         utc_time = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
         # Form submit button
-        submit_button = st.form_submit_button(label='Weiter', on_click=update_keys)
+        submit_button = st.form_submit_button(label="Speichern", on_click=update_keys)
 
         # Store the data in a DataFrame if the form is submitted
         if submit_button:
@@ -49,6 +45,11 @@ def collect_contact():
             contact_df = pd.DataFrame(contact_data)
             return contact_df
     return None
+
+# Function to update dict with session state keys after every submission of form
+def update_keys():
+    for k in st.session_state.key_dict_contact:
+        st.session_state.key_dict_contact[k] = st.session_state[k]
 
 # Function to append data to an existing Excel file
 def append_df_to_excel(file_path, df, sheet_name='contact_data', startrow=None, **to_excel_kwargs):
@@ -71,6 +72,12 @@ def append_df_to_excel(file_path, df, sheet_name='contact_data', startrow=None, 
         with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False, **to_excel_kwargs)
 
+# Function to show dataframe
+def show_dataframe(df_header, contact_df):
+    st.write(df_header)
+    st.dataframe(contact_df)
+    
+## Excecution of streamlit page
 # Initialize keys for contact input form if not available 
 if "key_dict_contact" not in st.session_state:
     st.session_state.key_dict_contact = {"input_nachname":"",
@@ -90,11 +97,13 @@ st.title("Kontakt")
 # Collect contact using the function
 contact_df = collect_contact()
 
-# Display the dataframe if not None
+# Display and store the dataframe if not None
 if contact_df is not None:
-
     # Append the DataFrame to the existing Excel file
     append_df_to_excel(file_path, contact_df)
+    show_dataframe (df_header, contact_df)
 
-    st.write("Eingegebene Firmenadresse:")
-    st.dataframe(contact_df)
+# Display buttons to switch between input pages
+button_next = st.button("Weiter")
+if button_next:
+    st.switch_page("pages/input/company.py")
