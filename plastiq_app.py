@@ -1,16 +1,37 @@
 import streamlit as st
 
-page_input_contact = st.Page("pages/input/contact.py", title="Kontakt", icon=":material/contacts:")
-page_input_company = st.Page("pages/input/company.py", title="Unternehmen", icon=":material/apartment:")
-page_input_product = st.Page("pages/input/product.py", title="Abfalldaten", icon=":material/add_circle:")
-page_output_score = st.Page("pages/output/score.py", title="Passende Verwertung", icon=":material/all_match:")
-page_output_recyler = st.Page("pages/output/recycler.py", title="Passende Abnehmer", icon=":material/pin_drop:")
+page_input_contact = st.Page("subpages/input/contact.py", title="Kontakt", icon=":material/contacts:")
+page_input_company = st.Page("subpages/input/company.py", title="Unternehmen", icon=":material/apartment:")
+page_input_product = st.Page("subpages/input/product.py", title="Zusammensetzung", icon=":material/add_circle:")
+page_input_pr_origin = st.Page("subpages/input/product_origin.py", title="Herkunft", icon=":material/add_circle:")
+page_input_pr_quality = st.Page("subpages/input/product_quality.py", title="Qualität – Wertstoff", icon=":material/add_circle:")
+page_input_pr_quality_additive = st.Page("subpages/input/product_quality_additive.py", title="Qualität – Zusätze", icon=":material/add_circle:")
+page_input_pr_further = st.Page("subpages/input/product_further.py", title="Weitere Angaben", icon=":material/add_circle:")
+page_output_score = st.Page("subpages/output/score.py", title="Passende Verwertung", icon=":material/all_match:")
+page_output_recyler = st.Page("subpages/output/recycler.py", title="Passende Abnehmer", icon=":material/pin_drop:")
+
 
 pg = st.navigation(
     {
-        "Datenaufnahme": [page_input_contact, page_input_company, page_input_product],
+        "Datenaufnahme - Kontakt": [page_input_contact, page_input_company],
+        "Datenaufnahme - Wertstoff": [page_input_product, page_input_pr_origin, page_input_pr_quality, page_input_pr_quality_additive, page_input_pr_further],
         "Ergebnisse": [page_output_score, page_output_recyler],
     }
 )
 
+
+# Initialize keys for product input form if not available 
+if "key_dict_product" not in st.session_state:
+    st.session_state.key_dict_product = {"input_waste_fraction_number":1,
+                                         "input_wertstoff_name":None,
+                                         "input_wertstoff_typ":None,
+                                         }
+
+# Initialize keys for product input form if not available 
+if "key_dict_product_origin" not in st.session_state:
+    st.session_state.key_dict_product_origin = {"input_wertstoff_origin":None,
+                                                "input_wertstoff_use":"",
+                                                "input_wertstoff_collection":None,
+                                                "input_wertstoff_code":"",
+                                                }
 pg.run()

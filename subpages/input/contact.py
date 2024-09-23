@@ -106,4 +106,4 @@ if contact_df is not None:
 # Display buttons to switch between input pages
 button_next = st.button("Weiter")
 if button_next:
-    st.switch_page("pages/input/company.py")
+    st.switch_page("subpages/input/company.py")

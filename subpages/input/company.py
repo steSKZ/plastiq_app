@@ -233,7 +233,7 @@ if company_df is not None:
 left_column_bottom, right_column_bottom = st.columns([.13,1])
 button_back = left_column_bottom.button("Zurück")
 if button_back:
-    st.switch_page("pages/input/contact.py")
+    st.switch_page("subpages/input/contact.py")
 button_next = right_column_bottom.button("Weiter")
 if button_next:
-    st.switch_page("pages/input/product.py")
+    st.switch_page("subpages/input/product.py")
