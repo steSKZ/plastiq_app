@@ -21,7 +21,6 @@ fuellstoff_typ_list = [ # list with all common fillers
     "Kaolin", "Naturfasern", "Ruß", "Silica", "Talk", "Wollastonit"
 ]
 
-
 ## Functions
 # Function to update dict with session state keys after every submission of form
 def update_keys():
@@ -39,9 +38,7 @@ def collect_product_quality(value_fraction, value_origin):
         wertstoff_verschmutzungsart = st.text_input(label="Verschmutzungsart", key="input_wertstoff_contaminants_type")
 
         values_additiv_typ = []
-        values_additiv_anteil = []
         values_fuellstoff_typ = []
-        values_fuellstoff_anteil = []
 
         if value_origin == "Post-Industrial (PI)":
         
@@ -80,9 +77,7 @@ def collect_product_quality(value_fraction, value_origin):
                 "Verschmutzungsgrad": [wertstoff_verschmutzungsgrad],
                 "Verschmutzungsart": [wertstoff_verschmutzungsart],
                 "Additive": [values_additiv_typ],
-                #"Additivanteil": [values_additiv_anteil],
                 "Füllstoffe": [values_fuellstoff_typ],
-                #"Füllstoffanteil": [values_fuellstoff_anteil]
             }
 
             product_df = pd.DataFrame(product_quality)
@@ -115,30 +110,19 @@ def append_df_to_excel(file_path, df, sheet_name='product_quality', startrow=Non
         with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False, **to_excel_kwargs)
 
-# Initialize keys for product input form if not available 
-if "key_dict_product_quality" not in st.session_state:
-    st.session_state.key_dict_product_quality = {"input_wertstoff_reach":None,
-                                                "input_wertstoff_colour":None,
-                                                "input_wertstoff_purity":100,
-                                                "input_wertstoff_contaminants_level":None,
-                                                "input_wertstoff_contaminants_type":"",
-                                                "input_additiv_typ":None,
-                                                "input_additiv_anteil":0,
-                                                "input_fuellstoff_typ":None,
-                                                "input_fuellstoff_anteil":0,
-                                                }
-    
+# Collect contact using the function
+value_fraction = st.session_state.key_dict_product["input_waste_fraction_number"]
+value_origin = st.session_state.key_dict_product_origin["input_wertstoff_origin"]
+
 # For loop: Create session state key for every key in key_dict_product
-for k in st.session_state.key_dict_product_quality:
-    st.session_state[k] = st.session_state.key_dict_product_quality[k]
+for i in st.session_state.key_dict_product_quality:
+    st.session_state[i] = st.session_state.key_dict_product_quality[i]
 
 # Streamlit app
 st.title("Wertstoffdaten")
 st.header("Qualität des Wertstoffs", divider="red", help="Bitte gebe die Informationen zur Qualität des Wertstoffs an.")
 
-# Collect contact using the function
-value_fraction = st.session_state.key_dict_product["input_waste_fraction_number"]
-value_origin = st.session_state.key_dict_product_origin["input_wertstoff_origin"]
+# Function to collect product quality data
 product_df = collect_product_quality(value_fraction, value_origin)
 
 # Display the dataframe if not None

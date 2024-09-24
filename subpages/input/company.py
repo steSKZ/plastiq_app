@@ -106,7 +106,7 @@ def collect_company():
         utc_time = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
         if verwerter:
-            leistungen = st.multiselect(label="Wählen Sie die Leistungen aus, die Sie anbieten.", options=leistungen_list)
+            leistungen = st.multiselect(label="Wählen Sie die Leistungen aus, die Sie anbieten.", options=leistungen_list, key="input_leistungen")
         else:
             leistungen = ""
 
@@ -197,7 +197,8 @@ if "key_dict_company" not in st.session_state:
                                          "input_bundesland":None,
                                          "input_land":None,
                                          "input_erzeuger":False,
-                                         "input_verwerter":False
+                                         "input_verwerter":False,
+                                         "input_leistungen":[]
                                          }
     
 # For loop: Create session state key for every key in key_dict_company

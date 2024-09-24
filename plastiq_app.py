@@ -19,13 +19,15 @@ pg = st.navigation(
     }
 )
 
-
 # Initialize keys for product input form if not available 
 if "key_dict_product" not in st.session_state:
-    st.session_state.key_dict_product = {"input_waste_fraction_number":1,
-                                         "input_wertstoff_name":None,
-                                         "input_wertstoff_typ":None,
-                                         }
+    st.session_state.key_dict_product = {"input_waste_fraction_number":1}
+
+    for i in range(4):
+        st.session_state.key_dict_product[f"input_wertstoff_typ_{i}"] = None
+        st.session_state.key_dict_product[f"input_wertstoff_name_{i}"] = ""
+        st.session_state.key_dict_product[f"input_wertstoff_anteil_{i}"] = 0.00
+    
 
 # Initialize keys for product input form if not available 
 if "key_dict_product_origin" not in st.session_state:
@@ -34,4 +36,18 @@ if "key_dict_product_origin" not in st.session_state:
                                                 "input_wertstoff_collection":None,
                                                 "input_wertstoff_code":"",
                                                 }
+    
+# Initialize keys for product input form if not available 
+if "key_dict_product_quality" not in st.session_state:
+    st.session_state.key_dict_product_quality = {"input_wertstoff_reach":None,
+                                                "input_wertstoff_colour":None,
+                                                "input_wertstoff_purity":100,
+                                                "input_wertstoff_contaminants_level":None,
+                                                "input_wertstoff_contaminants_type":"",
+                                                }
+
+    for i in range(4):
+        st.session_state.key_dict_product_quality[f"input_additiv_typ_{i}"] = []
+        st.session_state.key_dict_product_quality[f"input_fuellstoff_typ_{i}"] = []
+
 pg.run()

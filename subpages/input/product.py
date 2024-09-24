@@ -97,8 +97,6 @@ def append_df_to_excel(file_path, df, sheet_name='product_fractions', startrow=N
         with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False, **to_excel_kwargs)
 
-
-    
 # For loop: Create session state key for every key in key_dict_product
 for k in st.session_state.key_dict_product:
     st.session_state[k] = st.session_state.key_dict_product[k]
