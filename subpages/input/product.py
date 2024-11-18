@@ -5,19 +5,12 @@ import datetime
 
 ## Basic variables
 # Save data to excel file
-file_path = "content/plastiq_input_information.xlsx"
+file_path_input = "content/plastiq_input_information.xlsx"
+# Load background data from excel file
+file_path_background = "content/background_data_decision_tree.xlsx"
 df_header = "Produktinformationen"
-wertstoff_typ_list = [ # list with all common plastic and metal sorts
-    "Kunststoff – ABS", "Kunststoff – ASA", "Kunststoff – Duroplaste", "Kunststoff – Elastomere", 
-    "Kunststoff – PA", "Kunststoff – PBT", "Kunststoff – PC", "Kunststoff – PE-HD", 
-    "Kunststoff – PE-LD", "Kunststoff – PE-LLD", "Kunststoff – PE-MD", "Kunststoff – PEEK", 
-    "Kunststoff – PET", "Kunststoff – PMMA", "Kunststoff – POM", "Kunststoff – PP", 
-    "Kunststoff – PS", "Kunststoff – PS-E/XPS", "Kunststoff – PUR", "Kunststoff – PVC", 
-    "Kunststoff – SAN", "Kunststoff – Sonstige Thermoplaste", "Metall – Aluminium", 
-    "Metall – Blei", "Metall – Chrom", "Metall – Eisen", "Metall – Kupfer", 
-    "Metall – Magnesium", "Metall – Nickel", "Metall – Stahl", "Metall – Titan", 
-    "Metall – Zink"
-]
+# Create list with all relevant materials
+wertstoff_typ_list = pd.read_excel(file_path_background, sheet_name = "list_material")["abbreviation"].tolist()
 
 ## Functions
 # Function to update dict with session state keys after every submission of form
@@ -77,13 +70,13 @@ def show_dataframe(header, df):
     st.dataframe(df)
 
 # Function to append data to an existing Excel file
-def append_df_to_excel(file_path, df, sheet_name='product_fractions', startrow=None, **to_excel_kwargs):
+def append_df_to_excel(file_path_input, df, sheet_name='product_fractions', startrow=None, **to_excel_kwargs):
     try:
         # Try to open an existing workbook
-        with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+        with pd.ExcelWriter(file_path_input, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
             # Get the last row in the existing Excel sheet if startrow is not defined
             if startrow is None:
-                writer.workbook = load_workbook(file_path)
+                writer.workbook = load_workbook(file_path_input)
                 if sheet_name in writer.workbook.sheetnames:
                     startrow = writer.workbook[sheet_name].max_row
                 else:
@@ -94,7 +87,7 @@ def append_df_to_excel(file_path, df, sheet_name='product_fractions', startrow=N
 
     except FileNotFoundError:
         # If the file does not exist, create it with the DataFrame
-        with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+        with pd.ExcelWriter(file_path_input, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False, **to_excel_kwargs)
 
 # For loop: Create session state key for every key in key_dict_product
@@ -114,7 +107,7 @@ product_df = collect_product(waste_fractions_number)
 if product_df is not None:
 
     # Append the DataFrame to the existing Excel file
-    append_df_to_excel(file_path, product_df)
+    append_df_to_excel(file_path_input, product_df)
     show_dataframe (df_header, product_df)
 
 # Display buttons to switch between input pages
