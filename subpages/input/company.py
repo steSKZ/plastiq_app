@@ -130,7 +130,7 @@ def collect_company():
                 st.success(f"Koordinaten: {latitude}, {longitude}")
         
                 # Create a dataframe with the coordinates for st.map
-                coordinates_data = {
+                st.session_state.coordinates_data = {
                     'latitude': [latitude],
                     'longitude': [longitude]
                 }
@@ -138,7 +138,7 @@ def collect_company():
                 # Display the map with the coordinates
                 #st.map(pd.DataFrame(coordinates_data))
             else:
-                coordinates_data = {
+                st.session_state.coordinates_data = {
                     'latitude': "",
                     'longitude': ""
                 }
@@ -158,7 +158,7 @@ def collect_company():
                 "Leistungen": [leistungen]
             }
 
-            company_df = pd.DataFrame(company_data|coordinates_data)
+            company_df = pd.DataFrame(company_data|st.session_state.coordinates_data)
             return company_df
     return None
 
